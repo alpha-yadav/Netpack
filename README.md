@@ -29,36 +29,36 @@ Needs elevated privileges to open a raw socket (this is a kernel
 restriction, not a Scapy limitation):
 
 ```bash
-sudo python3 analyzer.py --iface eth0 --i-have-authorization
+sudo python3 analyzer.py --iface eth0 
 ```
 
 Or grant the capability once instead of using `sudo` every time:
 
 ```bash
 sudo setcap cap_net_raw,cap_net_admin=eip $(which python3)
-python3 analyzer.py --iface eth0 --i-have-authorization
+python3 analyzer.py --iface eth0 
 ```
 
 ### Useful flag combinations
 
 ```bash
 # Only show DNS queries/responses
-python3 analyzer.py --iface eth0 --i-have-authorization --dns-only
+python3 analyzer.py --iface eth0 -l1 dns
 
 # Only show HTTP requests and HTTPS SNI handshakes
-python3 analyzer.py --iface eth0 --i-have-authorization --http-only
+python3 analyzer.py --iface eth0 -l http
 
 # Capture 200 packets, save to a .pcap for later analysis in Wireshark
-python3 analyzer.py --iface eth0 --i-have-authorization --count 200 --pcap-out capture.pcap
+python3 analyzer.py --iface eth0 --count 200 --save capture.pcap
 
 # Flag a source IP that hits >10 distinct ports with bare SYNs within the detector's window
-python3 analyzer.py --iface eth0 --i-have-authorization --detect-scans --scan-threshold 10
+python3 analyzer.py --iface eth0 --scan-threshold 10
 
 # Custom BPF filter (same syntax as tcpdump)
-python3 analyzer.py --iface eth0 --i-have-authorization --filter "tcp port 443"
+python3 analyzer.py --iface eth0  --filter "tcp port 443"
 ```
 
-Stop anytime with `Ctrl+C`; if `--pcap-out` was set, whatever was captured
+Stop anytime with `Ctrl+C`; if `--save` was set, whatever was captured
 up to that point is still written out.
 
 ## What it actually shows you
