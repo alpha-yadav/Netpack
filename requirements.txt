@@ -1,0 +1,5 @@
+scapy>=2.5
+
+# Scapy needs libpcap to capture live traffic on Linux:
+#   sudo apt-get install libpcap0.8   (Debian/Ubuntu)
+#   sudo dnf install libpcap          (Fedora/RHEL)
