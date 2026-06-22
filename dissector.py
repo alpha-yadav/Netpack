@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
-from scapy.all import DNS, DNSQR, DNSRR, IP, TCP, UDP, Ether, Raw
+from scapy.all import DNS, DNSQR, DNSRR, IP, TCP, UDP, Ether, Raw,IPv6
 
 # TCP control flag bits -> human-readable handshake/connection-state labels.
 # Scapy exposes pkt[TCP].flags as a string like "S", "SA", "A", "FA", "R", etc.
@@ -46,8 +46,15 @@ def dissect_ip(pkt) -> Optional[Dict[str, Any]]:
         "ttl": ip.ttl,
         "proto_num": ip.proto,  # 6 = TCP, 17 = UDP
     }
-
-
+def dissect_ip6(pkt) -> Optional[Dict[str, Any]]:
+    if not pkt.haslayer(IPv6):
+        return None
+    ip = pkt[IPv6]
+    return {
+        "src_ip": ip.src,
+        "dst_ip": ip.dst
+        #"proto_num": ip.proto,  # 6 = TCP, 17 = UDP
+    }
 def dissect_tcp(pkt) -> Optional[Dict[str, Any]]:
     if not pkt.haslayer(TCP):
         return None
@@ -173,7 +180,9 @@ def dissect(pkt) -> Dict[str, Any]:
     ip = dissect_ip(pkt)
     if ip:
         result["ip"] = ip
-
+    ip = dissect_ip6(pkt)
+    if ip:
+        result["ip6"] = ip
     tcp = dissect_tcp(pkt)
     if tcp:
         result["tcp"] = tcp
